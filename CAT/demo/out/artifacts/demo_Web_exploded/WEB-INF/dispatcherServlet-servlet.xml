@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+		<!-- SpringMVC的配置文件，包含网站跳转逻辑的控制，配置-->
+		<context:component-scan base-package="com.demo.controller,com.demo.baseController"></context:component-scan>
+
+		<!-- 两个标配 -->
+		<mvc:annotation-driven/><!-- 能支持SpringMVC更高级的一些功能 -->
+		<mvc:default-servlet-handler/><!-- 将SpringMVC不能处理的请求交给Tomcat -->
+
+		<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="10485760"></property>
+		<property name="defaultEncoding" value="utf-8"></property>
+		</bean>
+
+</beans>

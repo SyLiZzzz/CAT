@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.UserMapper">
+    <insert id="addUser" parameterType="User">
+    insert into t_user
+        (account,sex,`password`,phone,create_time,version,is_deleted,user_role_id)
+        values
+        (#{account},#{sex},#{password},#{phone},now(),#{version},#{isDeleted},#{userRoleId})
+</insert>
+    <select id="loginByAccount" parameterType="map" resultType="User">
+        select * from t_user where is_deleted = 0  and account = #{account} and password = #{password}
+    </select>
+
+    <select id="selectById" parameterType="map" resultType="User">
+        select * from t_user where is_deleted = 0 and user_id =#{userId}
+    </select>
+
+    <select id="selectUserById" parameterType="map" resultType="User">
+        select account,sex,phone from t_user where is_deleted =0 and user_id = #{userId}
+    </select>
+
+    <update id="updateUser" parameterType="User">
+        update t_user set account = #{account},sex=#{sex},phone=#{phone},`password`=#{password},update_time=#{updateTime},version =version+1 where is_deleted = 0 and user_id = #{userId}
+    </update>
+    
+    <sql id="Admin">
+        a.user_id,a.account,a.sex,a.phone,a.is_deleted,a.user_role_id
+    </sql>
+    <select id="loginAdmin" parameterType="User" resultType="User">
+        select <include refid="Admin"></include> from t_user a LEFT JOIN t_role b on a.user_role_id =b.role_id where  a.is_deleted = 0 and a.user_role_id =1 and phone =#{phone} and password=#{password}
+    </select>
+    <sql id="selectpage">
+        user_id,account,sex,password,phone,create_time,is_deleted,user_role_id
+    </sql>
+    <select id="selectPageInfo"  resultType="User">
+        select <include refid="selectpage"></include> from t_user
+        <if test="account != null">
+            where account like concat('%',#{account},'%')
+        </if>
+    </select>
+    <insert id="AdminAddUser" parameterType="User">
+    insert into t_user
+        (account,sex,`password`,phone,create_time,version,is_deleted,user_role_id)
+        values
+        (#{account},#{sex},#{password},#{phone},now(),#{version},#{isDeleted},#{userRoleId})
+    </insert>
+
+    <select id="AdminSelectUserById" parameterType="map" resultType="User">
+        select user_id,account,sex,phone,password,is_deleted,user_role_id from t_user where  user_id = #{userId}
+    </select>
+
+    <update id="AdminUpdateUser" parameterType="User">
+        update t_user set account = #{account},sex=#{sex},phone=#{phone},`password`=#{password},update_time=#{updateTime},version =version+1,is_deleted=#{isDeleted},user_role_id=#{userRoleId} where user_id = #{userId}
+    </update>
+
+    <update id="AdminDeleteUser" parameterType="User">
+        update t_user set is_deleted=#{isDeleted} , version =version+1 where user_id =#{userId}
+    </update>
+
+    <update id="AdminDeletedAllUser" parameterType="map">
+        update t_user set is_deleted=1,version=version+1 where user_id in
+        <foreach item="item" collection="ids" index="index"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    <select id="loginByPhone" parameterType="map" resultType="User">
+        select * from t_user where is_deleted = 0  and phone = #{phone}
+    </select>
+
+</mapper>

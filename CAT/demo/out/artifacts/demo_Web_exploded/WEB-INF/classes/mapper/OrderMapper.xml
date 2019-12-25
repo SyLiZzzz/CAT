@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.OrderMapper">
+    <insert id="insertOrder" parameterType="map">
+        insert into t_order (user_id,user_name,address_id,drink_name,price,state,create_time,is_deleted,version)
+         VALUES
+        (#{userId},#{userName},#{addressId},#{drinkName},#{price},#{state},now(),#{isDeleted},#{version})
+    </insert>
+    <sql id="OrbyId">
+        a.order_id,a.drink_name,a.price,b.addressInfo,b.infos,a.state
+    </sql>
+    <select id="selectOrById" parameterType="Order" resultType="map">
+        select <include refid="OrbyId"></include> from t_order a LEFT JOIN t_address b  on a.address_id = b.address_id where a.is_deleted=0 and a.user_id = #{userId}
+    </select>
+    <update id="deletedOrderById" parameterType="map">
+    update t_order set is_deleted=1 where is_deleted=0 and order_id =#{orderId}
+    </update>
+
+    <sql id="selectAll">
+        a.order_id,a.user_id,a.user_name,a.address_id,b.addressInfo,b.infos,a.drink_name,a.price,a.state,a.create_time,a.is_deleted
+    </sql>
+    <select id="AdminSelectAll" parameterType="map" resultType="map">
+        select <include refid="selectAll"></include> from t_order a LEFT JOIN t_address b on a.address_id =b.address_id
+        <if test="user_name != null">
+            where a.user_name like concat('%',#{user_name},'%')
+        </if>
+    </select>
+
+    <update id="AdminChangeState" parameterType="Order">
+        update t_order set state=#{state} , version =version+1 where order_id =#{order_id}
+    </update>
+
+    <update id="AdminChangDeleted" parameterType="Order">
+        update t_order set is_deleted=#{is_deleted} , version =version+1 where order_id =#{order_id}
+    </update>
+
+    <update id="AdmindeleteAll" parameterType="map">
+        update t_order set is_deleted=1,version=version+1 where order_id in
+        <foreach item="item" collection="ids" index="index"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="ChangeStateAll" parameterType="map">
+        update t_order set state=1,version=version+1 where order_id in
+        <foreach item="item" collection="ids" index="index"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

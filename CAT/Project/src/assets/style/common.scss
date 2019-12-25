@@ -1,0 +1,50 @@
+$red :#409EFF;
+*{
+  margin: 0px;
+  padding: 0px;
+  font-size: 14px;
+}
+html,body,#app{
+  height: 100%;
+  width: 100%;
+  min-width:1500px;
+  min-height: 700px;
+}
+body {
+  font:14px "microsoft yahei", "arial, helvetica, sans-serif";
+  color: black;
+}
+ul,li,p,h1,h2,h3,h4,h5,h6,dl,dt,dd{
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+a{
+  text-decoration: none;
+  text-shadow: none;
+  font-family: "微软雅黑";
+  color:#000;
+}
+ul{
+  list-style: none;
+}
+textarea,input{
+  outline:none;
+  -webkit-appearance:none;
+  font-family: "微软雅黑";
+}
+.fl{
+  float: left;
+}
+.fr{
+  float: right;
+}
+img{
+  border: none;
+}
+.clear{
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}
+

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="commons-codec-1.3">
+    <CLASSES>
+      <root url="jar://D:/日常/项目需求/实训项目/验证码/ihuyi-sms-3.3/互亿无线-短信验证码接口文档/DEMO/java/http_post/lib/commons-codec-1.3.jar!/" />
+      <root url="jar://D:/日常/项目需求/实训项目/验证码/ihuyi-sms-3.3/互亿无线-短信验证码接口文档/DEMO/java/http_post/lib/commons-httpclient-3.0-rc4.jar!/" />
+      <root url="jar://D:/日常/项目需求/实训项目/验证码/ihuyi-sms-3.3/互亿无线-短信验证码接口文档/DEMO/java/http_post/lib/commons-logging-1.0.4.jar!/" />
+      <root url="jar://D:/日常/项目需求/实训项目/验证码/ihuyi-sms-3.3/互亿无线-短信验证码接口文档/DEMO/java/http_post/lib/dom4j-1.6.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
