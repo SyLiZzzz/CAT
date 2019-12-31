@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.CarMapper">
+    <insert id="addtoCar" parameterType="Car">
+        insert into t_car
+        (user_id,drink_id,picture,`name`,price,create_time,version,is_deleted)
+        values
+        (#{userId},#{drinkId},#{picture},#{name},#{price},now(),#{version},#{isDeleted})
+    </insert>
+    <sql id="selectById">
+        car_id,user_id,picture,`name`,price,num
+    </sql>
+    <select id="selectCarById" parameterType="Integer" resultType="Car">
+        select <include refid="selectById"></include> from t_car where is_deleted =0 and user_id = #{userId}
+    </select>
+    <update id="deletedById" parameterType="map">
+    update t_car set is_deleted=1 where is_deleted=0 and car_id =(#{carId})
+    </update>
+    <update id="deleteCar" parameterType="map">
+        update t_car set is_deleted =1 where is_deleted =0 and user_id =#{userId}
+    </update>
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.DrinkMapper">
+    <sql id="selectpage">
+        a.drink_id,a.drink_name,a.drink_picture,a.price,a.`explain`,b.score
+    </sql>
+    <select id="selectPageInfo"  resultType="com.demo.bean.Drink">
+        select <include refid="selectpage"></include> from t_drink a LEFT JOIN t_comment b on a.drink_id = b.comment_id
+        <if test="drink_name != null">
+            where a.drink_name like concat('%',#{drink_name},'%') and a.is_deleted=0
+        </if>
+    </select>
+    <sql id="selectBy">
+        b.drink_id,b.drink_name,b.drink_picture,b.price,b.`explain`,s.score
+    </sql>
+    <select id="selectInfoByCoffee" resultType="Drink">
+        select <include refid="selectBy"></include> from t_category a LEFT JOIN t_drink b on a.parent_id =b.parent_id LEFT JOIN t_comment s on b.drink_id=s.comment_id WHERE a.parent_id =1 and b.is_deleted=0
+    </select>
+    <select id="selectInfoByTea" resultType="Drink">
+        select <include refid="selectBy"></include> from t_category a LEFT JOIN t_drink b on a.parent_id =b.parent_id LEFT JOIN t_comment s on b.drink_id=s.comment_id WHERE a.parent_id =2 and b.is_deleted=0
+    </select>
+    <sql id="orderby">
+        a.drink_id,a.drink_name,a.drink_picture,a.price,a.`explain`,b.score
+    </sql>
+    <select id="selectScoreAsc" resultType="Drink">
+        select <include refid="orderby"></include> from t_drink a LEFT JOIN t_comment b on a.drink_id =b.comment_id where a.is_deleted=0 ORDER BY b.score asc
+    </select>
+    <select id="selectScoreDesc" resultType="Drink">
+        select <include refid="orderby"></include> from t_drink a LEFT JOIN t_comment b on a.drink_id =b.comment_id where a.is_deleted=0 ORDER BY b.score desc
+    </select>
+    <select id="selectPriceAsc" resultType="Drink">
+        select <include refid="orderby"></include> from t_drink a LEFT JOIN t_comment b on a.drink_id =b.comment_id where a.is_deleted=0 ORDER BY a.price asc
+    </select>
+    <select id="selectPriceDesc" resultType="Drink">
+        select <include refid="orderby"></include> from t_drink a LEFT JOIN t_comment b on a.drink_id =b.comment_id where a.is_deleted=0 ORDER BY a.price desc
+    </select>
+    <sql id="selectByid">
+        a.drink_id,a.drink_name,a.drink_picture,a.price,a.`explain`,b.score
+    </sql>
+    <select id="selectInfoById" resultType="Drink">
+        select <include refid="selectByid"></include> from t_drink a LEFT JOIN t_comment b on a.drink_id = b.comment_id where a.is_deleted = 0 and a.drink_id = #{drink_id}
+    </select>
+    <sql id="AdminSelectDrink">
+        a.drink_id,a.drink_name,a.drink_picture,a.price,a.`explain`,a.parent_id,a.create_timesd,a.is_deleted,b.score
+    </sql>
+    <select id="AdminSelectDrinkInfo"  resultType="Drink">
+        select <include refid="AdminSelectDrink"></include> from t_drink a LEFT JOIN t_comment b on a.drink_id = b.comment_id
+        <if test="drink_name != null">
+            where a.drink_name like concat('%',#{drink_name},'%')
+        </if>
+    </select>
+    <select id="AdminSelectInfoById" resultType="Drink">
+        select a.drink_id,a.drink_name,a.drink_picture,a.price,a.`explain`,a.parent_id,a.create_timesd,a.is_deleted,b.score from t_drink a LEFT JOIN t_comment b on a.drink_id = b.comment_id where a.drink_id =#{drinkId}
+    </select>
+    <update id="upload" parameterType="Drink">
+        update  t_drink set drink_picture =#{drinkPicture}  where drink_id =#{drinkId}
+    </update>
+
+    <insert id="AdminAddDrink" parameterType="Drink">
+        insert into t_drink (drink_name,price,`explain`,parent_id,create_timesd,version,is_deleted) values
+         (#{drinkName},#{price},#{explain},#{parentId},#{createTimesd},#{version},#{isDeleted})
+    </insert>
+
+    <update id="AdminDeleteDrink" parameterType="Drink">
+        update t_drink set is_deleted=#{isDeleted} , version =version+1 where drink_id =#{drinkId}
+    </update>
+
+    <update id="AdminDeletedAllDrink" parameterType="map">
+        update t_drink set is_deleted=1,version=version+1 where drink_id in
+        <foreach item="item" collection="ids" index="index"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <insert id="AdminAddScore" parameterType="comment">
+        insert into t_comment (create_time,score,version,is_deleted) values
+         (now(),#{score},#{version},#{isDeleted})
+    </insert>
+
+    <update id="ChangeScore" parameterType="map">
+        update t_comment set score=#{score} , version =version+1 where comment_id =#{commentId}
+    </update>
+
+    <update id="AdminUpdateDrink" parameterType="Drink">
+        update t_drink set drink_name = #{drinkName},price=#{price},`explain`=#{explain},parent_id=#{parentId},update_time=#{updateTime},version =version+1,is_deleted=#{isDeleted} where drink_id = #{drinkId}
+    </update>
+
+</mapper>
